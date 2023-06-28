@@ -25,7 +25,9 @@ async def _(bot, message):
         if str(message.from_user.id) not in SUDO:
             return await message.delete()
     else:
-        if str(message.chat.id) not in ALLOWED_CHANNELS:
+        if ALLOWED_CHANNELS == "0":
+            pass
+        elif str(message.chat.id) not in ALLOWED_CHANNELS:
             return await message.delete()
     await anime_arch(message)
 
