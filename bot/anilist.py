@@ -1,10 +1,12 @@
+from datetime import datetime
+
 import flag
 import humanize
 import requests
-from . import *
 from aiohttp import ClientSession
-from datetime import datetime
 from html_telegraph_poster import TelegraphPoster
+
+from . import *
 
 url = "https://graphql.anilist.co"
 anime_query = """
