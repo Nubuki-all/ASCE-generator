@@ -57,13 +57,17 @@ def get_readable_time(seconds: int) -> str:
     result += f"{seconds}s"
     return result
 
+
 def is_url(string):
     parsed = urlparse(string)
     return all([parsed.scheme, parsed.netloc])
+
+
 def reformat_spaces(url):
     space_pattern = re.compile(r"\s+")
     new_url = re.sub(space_pattern, "%20", url)
     return new_url
+
 
 try:
     bot = Client(
