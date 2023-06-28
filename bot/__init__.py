@@ -69,7 +69,7 @@ except Exception:
 
 async def startup():
     try:
-        for i in SUDOS.split():
+        for i in SUDO.split():
             try:
                 await bot.send_message((i), f"**I'm Online**")
             except Exception:
