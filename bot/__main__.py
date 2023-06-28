@@ -1,6 +1,5 @@
-from .anilist import anime_arch, get_info
-
 from . import *
+from .anilist import anime_arch, get_info
 
 LOGS.info("starting…")
 
