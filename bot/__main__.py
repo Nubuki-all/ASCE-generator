@@ -1,4 +1,4 @@
-from anilist import anime_arch, get_info
+from .anilist import anime_arch, get_info
 
 from . import *
 
