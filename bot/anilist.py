@@ -115,10 +115,10 @@ async def get_info(name, quality):
             trailer_link = (
                 f"<a href='https://youtu.be/{json['trailer']['id']}'>Trailer</a>"
             )
-        data.get("format")
+        json.get("format")
     except Exception:
         eng_title = None
-        LOGS.info(traceback.format.exc())
+        LOGS.info(traceback.format_exc())
     try:
         if eng_title is None:
             raise Exception("Getting info failed")
@@ -146,7 +146,7 @@ async def get_info(name, quality):
         if quality:
             msg += f"\n\n**‣ Quality Available :** `{quality}`\n"
     except Exception:
-        LOGS.info(traceback.format.exc())
+        LOGS.info(traceback.format_exc())
         msg, pic_url = None, None
 
     return msg, pic_url

@@ -4,7 +4,7 @@ from .anilist import anime_arch, get_info
 LOGS.info("starting…")
 
 
-@bot.on_message(filters.incoming & filters.command(["start, help"]))
+@bot.on_message(filters.incoming & filters.command(["start", "help"]))
 async def _(bot, message):
     await hello(message)
 
