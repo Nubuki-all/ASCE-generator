@@ -3,10 +3,10 @@ import os
 import sys
 import time
 import traceback
-
 from logging import DEBUG, INFO, basicConfig, getLogger, warning
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+
 from pyrogram import Client
 from pyrogram import errors as pyro_errors
 from pyrogram import filters
@@ -33,6 +33,7 @@ logging.getLogger("urllib3").setLevel(logging.INFO)
 logging.getLogger("telethon").setLevel(logging.INFO)
 LOGS = logging.getLogger(__name__)
 
+
 def get_readable_time(seconds: int) -> str:
     result = ""
     (days, remainder) = divmod(seconds, 86400)
@@ -50,6 +51,7 @@ def get_readable_time(seconds: int) -> str:
     seconds = int(seconds)
     result += f"{seconds}s"
     return result
+
 
 try:
     bot = Client(

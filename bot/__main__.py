@@ -1,5 +1,6 @@
+from anilist import anime_arch, get_info
+
 from . import *
-from anilist import get_info, anime_arch
 
 LOGS.info("starting…")
 
@@ -13,9 +14,11 @@ except Exception:
 async def _(bot, message):
     await hello(message)
 
+
 @bot.on_message(filters.incoming & filters.command(["set_psd"]))
 async def _(bot, message):
     await passwd(message)
+
 
 @bot.on_message(filters.incoming & filters.command(["logs"]))
 async def _(bot, message):
@@ -45,7 +48,6 @@ async def rep_msg_tmp(message, msg):
     await rep.delete()
 
 
-
 async def hello(message):
     if not str(message.from_user.id) in SUDO:
         return await message.delete()
@@ -65,7 +67,7 @@ async def passwd(message):
     if not str(message.from_user.id) in SUDO:
         return
     args = message.command[1]
-    if str(args) =="0":
+    if str(args) == "0":
         if PASSWD[0] == "0":
             await message.reply("`Password already disabled.`")
         await message.reply("`Password disabled.`")
@@ -84,11 +86,11 @@ async def generate(message):
     else:
         chat = message.chat.id
     arg = (message.text.split(maxsplit=1))[1]
-    parser = argparse.ArgumentParser(description='Wip')
-    parser.add_argument('-p', type=str, required=False)
-    parser.add_argument('-n', type=str, required=False)
-    parser.add_argument('-l', type=str, required=False)
-    parser.add_argument('-q', type=str, required=False)
+    parser = argparse.ArgumentParser(description="Wip")
+    parser.add_argument("-p", type=str, required=False)
+    parser.add_argument("-n", type=str, required=False)
+    parser.add_argument("-l", type=str, required=False)
+    parser.add_argument("-q", type=str, required=False)
 
     try:
         args, unknown = parser.parse_known_args(arg.split())
@@ -100,24 +102,24 @@ async def generate(message):
         value = ""
         for v in unknown:
             value += v + ", "
-        await rep_msg_tmp(message, f'**Warning:** The following were not parsed "`{value.strip(", ")}`"\nTo avoid uss quotes while passing arguments.')
-        
-    #Password check:
+        await rep_msg_tmp(
+            message,
+            f'**Warning:** The following were not parsed "`{value.strip(", ")}`"\nTo avoid uss quotes while passing arguments.',
+        )
+
+    # Password check:
     if PASSWD[0] == "0":
         pass
     elif not args.p:
         return await rep_msg_tmp(message, "`Please provide a password.`")
     elif args.p != PASSWD[0]:
         return await rep_msg_tmp(message, "`Incorrect password.`")
-    
-    #Anime name check:
+
+    # Anime name check:
     if not args.n:
         return await rep_msg_tmp(message, "`Please provide a name.`")
     if args.l and args.l.endswith(".com") and " " not in args.l:
-        link = InlineKeyboardButton(
-            text=f"🖇️ link",
-            url = args.l
-        )
+        link = InlineKeyboardButton(text=f"🖇️ link", url=args.l)
         link = InlineKeyboardMarkup([[link]])
     else:
         None
@@ -125,16 +127,12 @@ async def generate(message):
         caption, pic_url = await get_info(args.n, args.q)
         await message.delete()
         await bot.send_photo(
-            photo=pic_url,
-            caption=caption,
-            chat_id=chat,
-            reply_markup = link
+            photo=pic_url, caption=caption, chat_id=chat, reply_markup=link
         )
     except Exception:
         LOGS.info(traceback.format_exc())
         return rep_msg_tmp(message, "`An error occurred.`")
     return
-
 
 
 async def send_logs(message):
@@ -146,12 +144,13 @@ async def send_logs(message):
         await message.reply_document(
             document="logs.txt",
             quote=True,
-            caption=get_readable_time(time.time() - uptime)
+            caption=get_readable_time(time.time() - uptime),
         )
         return
     except Exception:
         LOGS.info(traceback.format_exc())
         await message.reply("`An error occurred.`")
+
 
 ########### Start ############
 

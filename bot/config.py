@@ -1,4 +1,5 @@
 from decouple import config
+
 try:
     ALLOWED_CHANNELS = config("ALLOWED_CHANNELS")
     APP_ID = config("APP_ID", default=6, cast=int)
@@ -7,6 +8,8 @@ try:
     PASSWD = config("PASSWORD", default="0")
     SUDO = config("SUDO")
 except Exception:
-    print("Something went wrong! or an important variable is missing check the below traceback for more info.")
+    print(
+        "Something went wrong! or an important variable is missing check the below traceback for more info."
+    )
     print(traceback.format_exc())
     exit()

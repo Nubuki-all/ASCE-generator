@@ -1,6 +1,5 @@
 import flag
 import requests
-
 from aiohttp import ClientSession
 from html_telegraph_poster import TelegraphPoster
 
@@ -81,12 +80,12 @@ async def get_info(name, quality):
         variables = {"search": name, "type": "ANIME"}
         json = (
             requests.post(url, json={"query": anime_query, "variables": variables})
-                .json()["data"]
-                .get("Media")
+            .json()["data"]
+            .get("Media")
         )
         # pylint: disable=possibly-unused-variable
         eng_title = json["title"]["english"]
-        eng_title = json['title']['romaji'] if eng_title is None else eng_title
+        eng_title = json["title"]["romaji"] if eng_title is None else eng_title
         jp_title = json["title"]["romaji"]
         id_ = json["id"]
         pic_url = f"https://img.anili.st/media/{id_}"
@@ -97,10 +96,10 @@ async def get_info(name, quality):
         except Exception:
             gen = None
         trailer_link = "N/A"
-        episode = json.get('episodes')
+        episode = json.get("episodes")
         duration = json.get("duration")
         status = json.get("status")
-        score = json['averageScore']
+        json["averageScore"]
         startDate = "N/A"
         endDate = None
         if json["startDate"]["year"]:
@@ -111,13 +110,13 @@ async def get_info(name, quality):
             trailer_link = (
                 f"<a href='https://youtu.be/{json['trailer']['id']}'>Trailer</a>"
             )
-        formats = data.get("format")
+        data.get("format")
     except Exception:
         eng_title = None
         LOGS.info(traceback.format.exc())
     try:
         if eng_title is None:
-            raise Exception('Getting info failed')
+            raise Exception("Getting info failed")
         if gen:
             genre = ""
             for x in gen:
@@ -144,11 +143,12 @@ async def get_info(name, quality):
     except Exception:
         LOGS.info(traceback.format.exc())
         msg, pic_url = None, None
-    
+
     return msg, pic_url
-    
+
+
 # Default templates for Query Formatting
-#https://github.com/UsergeTeam/Userge-Plugins/blob/dev/plugins/utils/anilist/__main__.py
+# https://github.com/UsergeTeam/Userge-Plugins/blob/dev/plugins/utils/anilist/__main__.py
 ANIME_TEMPLATE = """[{c_flag}]**{romaji}**
 
 **ID | MAL ID:** `{idm}` | `{idmal}`
@@ -166,16 +166,16 @@ ANIME_TEMPLATE = """[{c_flag}]**{romaji}**
 
 
 async def return_json_senpai(query, vars_):
-    """ Makes a Post to https://graphql.anilist.co. """
+    """Makes a Post to https://graphql.anilist.co."""
     url_ = "https://graphql.anilist.co"
     async with ClientSession() as api_:
-        post_con = await api_.post(url_, json={'query': query, 'variables': vars_})
+        post_con = await api_.post(url_, json={"query": query, "variables": vars_})
         json_data = await post_con.json()
         return json_data
 
 
 def post_to_tp(a_title, content):
-    """ Create a Telegram Post using HTML Content """
+    """Create a Telegram Post using HTML Content"""
     post_client = TelegraphPoster(use_api=True)
     auth_name = "@PhycoNinja13b"
     post_client.create_api_token(auth_name)
@@ -183,80 +183,73 @@ def post_to_tp(a_title, content):
         title=a_title,
         author=auth_name,
         author_url="https://t.me/PhycoNinja13b",
-        text=content
+        text=content,
     )
-    return post_page['url']
+    return post_page["url"]
 
 
 def make_it_rw(time_stamp, as_countdown=False):
-    """ Converting Time Stamp to Readable Format """
+    """Converting Time Stamp to Readable Format"""
     if as_countdown:
         now = datetime.now()
         air_time = datetime.fromtimestamp(time_stamp)
         return str(humanize.naturaltime(now - air_time))
     return str(humanize.naturaldate(datetime.fromtimestamp(time_stamp)))
 
+
 async def anime_arch(message):
-    """ Search Anime Info """
+    """Search Anime Info"""
     query = message.text.split(maxsplit=1)[1]
     if not query:
         await message.reply("NameError: 'query' not defined")
         return
-    vars_ = {
-        'search': query,
-        'asHtml': True,
-        'type': "ANIME"
-    }
+    vars_ = {"search": query, "asHtml": True, "type": "ANIME"}
     if query.isdigit():
-        vars_ = {
-            'id': int(query),
-            'asHtml': True,
-            'type': "ANIME"
-        }
+        vars_ = {"id": int(query), "asHtml": True, "type": "ANIME"}
     result = await return_json_senpai(anime_query, vars_)
-    error = result.get('errors')
+    error = result.get("errors")
     if error:
         LOG.info(f"**ANILIST RETURNED FOLLOWING ERROR:**\n\n`{error}`")
-        error_sts = error[0].get('message')
+        error_sts = error[0].get("message")
         await message.reply(f"[{error_sts}]")
         return
 
-    data = result['data']['Media']
+    data = result["data"]["Media"]
     # Data of all fields in returned json
     # pylint: disable=possibly-unused-variable
-    idm = data.get('id')
-    idmal = data.get('idMal')
-    romaji = data['title']['romaji']
-    english = data['title']['english']
-    native = data['title']['native']
-    formats = data.get('format')
-    status = data.get('status')
-    synopsis = data.get('description')
-    season = data.get('season')
-    episodes = data.get('episodes')
-    duration = data.get('duration')
-    country = data.get('countryOfOrigin')
+    idm = data.get("id")
+    idmal = data.get("idMal")
+    romaji = data["title"]["romaji"]
+    english = data["title"]["english"]
+    native = data["title"]["native"]
+    formats = data.get("format")
+    status = data.get("status")
+    synopsis = data.get("description")
+    season = data.get("season")
+    episodes = data.get("episodes")
+    duration = data.get("duration")
+    country = data.get("countryOfOrigin")
     c_flag = cflag.flag(country)
-    source = data.get('source')
-    coverImg = data.get('coverImage')['extraLarge']
-    bannerImg = data.get('bannerImage')
-    genres = data.get('genres')
+    source = data.get("source")
+    coverImg = data.get("coverImage")["extraLarge"]
+    bannerImg = data.get("bannerImage")
+    genres = data.get("genres")
     genre = genres[0]
     if len(genres) != 1:
         genre = ", ".join(genres)
-    score = data.get('averageScore')
+    score = data.get("averageScore")
     air_on = None
-    if data['nextAiringEpisode']:
-        nextAir = data['nextAiringEpisode']['airingAt']
+    if data["nextAiringEpisode"]:
+        nextAir = data["nextAiringEpisode"]["airingAt"]
         air_on = make_it_rw(nextAir)
-    s_date = data.get('startDate')
-    adult = data.get('isAdult')
+    s_date = data.get("startDate")
+    adult = data.get("isAdult")
     trailer_link = "N/A"
 
-    if data['trailer'] and data['trailer']['site'] == 'youtube':
+    if data["trailer"] and data["trailer"]["site"] == "youtube":
         trailer_link = f"[Trailer](https://youtu.be/{data['trailer']['id']})"
     html_char = ""
-    for character in data['characters']['nodes']:
+    for character in data["characters"]["nodes"]:
         html_ = ""
         html_ += "<br>"
         html_ += f"""<a href="{character['siteUrl']}">"""
@@ -265,13 +258,15 @@ async def anime_arch(message):
         html_ += f"<h3>{character['name']['full']}</h3>"
         html_ += f"<em>{c_flag} {character['name']['native']}</em><br>"
         html_ += f"<b>Character ID</b>: {character['id']}<br>"
-        html_ += f"<h4>About Character and Role:</h4>{character.get('description', 'N/A')}"
+        html_ += (
+            f"<h4>About Character and Role:</h4>{character.get('description', 'N/A')}"
+        )
         html_char += f"{html_}<br><br>"
 
     studios = ""
-    for studio in data['studios']['nodes']:
-        studios += "<a href='{}'>• {}</a> ".format(studio['siteUrl'], studio['name'])
-    url = data.get('siteUrl')
+    for studio in data["studios"]["nodes"]:
+        studios += "<a href='{}'>• {}</a> ".format(studio["siteUrl"], studio["name"])
+    url = data.get("siteUrl")
 
     title_img = coverImg or bannerImg
     html_pc = ""
