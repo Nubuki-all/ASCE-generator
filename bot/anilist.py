@@ -1,6 +1,9 @@
 import flag
+import humanize
 import requests
+from . import *
 from aiohttp import ClientSession
+from datetime import datetime
 from html_telegraph_poster import TelegraphPoster
 
 url = "https://graphql.anilist.co"
@@ -177,12 +180,12 @@ async def return_json_senpai(query, vars_):
 def post_to_tp(a_title, content):
     """Create a Telegram Post using HTML Content"""
     post_client = TelegraphPoster(use_api=True)
-    auth_name = "@PhycoNinja13b"
+    auth_name = "@Ani_mirror"
     post_client.create_api_token(auth_name)
     post_page = post_client.post(
         title=a_title,
         author=auth_name,
-        author_url="https://t.me/PhycoNinja13b",
+        author_url="https://t.me/Ani_mirror",
         text=content,
     )
     return post_page["url"]
@@ -229,7 +232,7 @@ async def anime_arch(message):
     episodes = data.get("episodes")
     duration = data.get("duration")
     country = data.get("countryOfOrigin")
-    c_flag = cflag.flag(country)
+    c_flag = flag.flag(country)
     source = data.get("source")
     coverImg = data.get("coverImage")["extraLarge"]
     bannerImg = data.get("bannerImage")

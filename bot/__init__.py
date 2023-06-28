@@ -1,6 +1,8 @@
 import argparse
+import asyncio 
 import logging
 import os
+import shlex
 import sys
 import time
 import traceback
@@ -60,7 +62,7 @@ try:
         api_id=APP_ID,
         api_hash=API_HASH,
         bot_token=BOT_TOKEN,
-        workers=1,
+        workers=3,
     )
 except Exception:
     LOGS.critical(traceback.format_exc())
@@ -72,8 +74,9 @@ async def startup():
     try:
         for i in SUDO.split():
             try:
-                await bot.send_message((i), f"**I'm Online**")
+                await bot.send_message(int(i), f"**I'm Online**")
             except Exception:
                 pass
     except BaseException:
         pass
+    LOGS.info("Bot has started.")

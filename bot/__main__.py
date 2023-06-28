@@ -3,11 +3,6 @@ from .anilist import anime_arch, get_info
 
 LOGS.info("starting…")
 
-try:
-    bot.start()
-except Exception:
-    LOGS.critical(traceback.format_exc())
-
 
 @bot.on_message(filters.incoming & filters.command(["start, help"]))
 async def _(bot, message):
@@ -30,12 +25,12 @@ async def _(bot, message):
         if str(message.from_user.id) not in SUDO:
             return await message.delete()
     else:
-        if message.chat.id not in ALLOWED_CHANNELS:
+        if str(message.chat.id) not in ALLOWED_CHANNELS:
             return await message.delete()
     await anime_arch(message)
 
 
-@bot.on_message(filters.incoming & filters.command(["gen"]))
+@bot.on_message(filters.incoming & filters.command(["gen", "create_sub"]))
 async def _(bot, message):
     await generate(message)
 
@@ -55,6 +50,7 @@ async def hello(message):
     reply += "\n\n**Available commands:**"
     reply += "\n /gen - `generate subchannel entries.` Arguments: -p (password) -n (name of anime) , -l (invite link)(optional) , -q (quality)(optional)"
     reply += "\n /set_psd - `change/disable password for bot.`"
+    reply += "\n /logs - `Get logs.`"
     reply += "\n /start - `see this message again.`"
     try:
         await message.reply(reply)
@@ -92,7 +88,7 @@ async def generate(message):
     parser.add_argument("-q", type=str, required=False)
 
     try:
-        args, unknown = parser.parse_known_args(arg.split())
+        args, unknown = parser.parse_known_args(shlex.split(arg))
     except SystemExit:
         er = "A drastic error occurred while trying to parse argument."
         LOGS.info(er)
@@ -103,7 +99,7 @@ async def generate(message):
             value += v + ", "
         await rep_msg_tmp(
             message,
-            f'**Warning:** The following were not parsed "`{value.strip(", ")}`"\nTo avoid uss quotes while passing arguments.',
+            f'**Warning:** The following were not parsed "`{value.strip(", ")}`"\nTo avoid use quotes while passing arguments.',
         )
 
     # Password check:
@@ -118,10 +114,10 @@ async def generate(message):
     if not args.n:
         return await rep_msg_tmp(message, "`Please provide a name.`")
     if args.l and args.l.endswith(".com") and " " not in args.l:
-        link = InlineKeyboardButton(text=f"🖇️ link", url=args.l)
+        link = InlineKeyboardButton(text=f"◉  Link", url=args.l)
         link = InlineKeyboardMarkup([[link]])
     else:
-        None
+        link = None
     try:
         caption, pic_url = await get_info(args.n, args.q)
         await message.delete()
@@ -130,7 +126,7 @@ async def generate(message):
         )
     except Exception:
         LOGS.info(traceback.format_exc())
-        return rep_msg_tmp(message, "`An error occurred.`")
+        return await rep_msg_tmp(message, "`An error occurred.`")
     return
 
 
@@ -153,7 +149,11 @@ async def send_logs(message):
 
 ########### Start ############
 
-LOGS.info("Bot has started.")
-with bot:
-    bot.loop.run_until_complete(startup())
-    bot.loop.run_forever()
+try:
+    with bot:
+        bot.loop.run_until_complete(startup())
+        bot.loop.run_forever()
+except Exception:
+    LOGS.critical(traceback.format_exc())
+    LOGS.critical("Cannot recover from error, exiting…")
+    exit()
