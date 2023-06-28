@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import logging
 import os
+import re
 import shlex
 import sys
 import time
@@ -9,6 +10,7 @@ import traceback
 from logging import DEBUG, INFO, basicConfig, getLogger, warning
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from urllib.parse import urlparse
 
 from pyrogram import Client
 from pyrogram import errors as pyro_errors
@@ -55,6 +57,13 @@ def get_readable_time(seconds: int) -> str:
     result += f"{seconds}s"
     return result
 
+def is_url(string):
+    parsed = urlparse(string)
+    return all([parsed.scheme, parsed.netloc])
+def reformat_spaces(url):
+    space_pattern = re.compile(r"\s+")
+    new_url = re.sub(space_pattern, "%20", url)
+    return new_url
 
 try:
     bot = Client(

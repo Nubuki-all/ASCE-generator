@@ -113,8 +113,9 @@ async def generate(message):
     # Anime name check:
     if not args.n:
         return await rep_msg_tmp(message, "`Please provide a name.`")
-    if args.l and args.l.endswith(".com") and " " not in args.l:
-        link = InlineKeyboardButton(text=f"◉  Link", url=args.l)
+    if is_url(args.l):
+        re_link = reformat_spaces(args.l)
+        link = InlineKeyboardButton(text=f"◉  Link", url=re_link)
         link = InlineKeyboardMarkup([[link]])
     else:
         link = None
