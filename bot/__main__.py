@@ -76,10 +76,11 @@ async def passwd(message):
 async def generate(message):
     if message.from_user:
         return await message.reply("Coming soon.")
-    if not str(message.chat.id) == ALLOWED_CHANNELS:
+    if ALLOWED_CHANNELS == "0":
+        pass
+    elif not str(message.chat.id) in ALLOWED_CHANNELS:
         return
-    else:
-        chat = message.chat.id
+    chat = message.chat.id
     arg = (message.text.split(maxsplit=1))[1]
     parser = argparse.ArgumentParser(description="Wip")
     parser.add_argument("-p", type=str, required=False)
