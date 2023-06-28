@@ -86,7 +86,7 @@ async def get_info(name, quality):
         )
         # pylint: disable=possibly-unused-variable
         eng_title = json["title"]["english"]
-        eng_title = json['title']['romaji']} if eng_title is None else eng_title
+        eng_title = json['title']['romaji'] if eng_title is None else eng_title
         jp_title = json["title"]["romaji"]
         id_ = json["id"]
         pic_url = f"https://img.anili.st/media/{id_}"
