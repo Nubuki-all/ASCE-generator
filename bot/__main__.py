@@ -88,7 +88,9 @@ async def generate(message):
     parser.add_argument("-p", type=str, required=False)
     parser.add_argument("-n", type=str, required=False)
     parser.add_argument("-l", type=str, required=False)
+    parser.add_argument("-b", type=str, required=False)
     parser.add_argument("-q", type=str, required=False)
+    parser.add_argument("-t", type=str, required=False)
 
     try:
         args, unknown = parser.parse_known_args(shlex.split(arg))
@@ -116,14 +118,14 @@ async def generate(message):
     # Anime name check:
     if not args.n:
         return await rep_msg_tmp(message, "`Please provide a name.`")
-    if is_url(args.l):
-        re_link = reformat_spaces(args.l)
+    if is_url(args.b):
+        re_link = reformat_spaces(args.b)
         link = InlineKeyboardButton(text=f"◉  Link", url=re_link)
         link = InlineKeyboardMarkup([[link]])
     else:
         link = None
     try:
-        caption, pic_url = await get_info(args.n, args.q)
+        caption, pic_url = await get_info(args.n, args.q, args.l, args.t)
         await message.delete()
         await bot.send_photo(
             photo=pic_url, caption=caption, chat_id=chat, reply_markup=link

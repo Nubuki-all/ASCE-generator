@@ -80,7 +80,7 @@ query ($id: Int, $idMal:Int, $search: String, $type: MediaType, $asHtml: Boolean
 """
 
 
-async def get_info(name, quality):
+async def get_info(name, quality, invite_link, tags):
     try:
         variables = {"search": name, "type": "ANIME"}
         json = (
@@ -143,8 +143,14 @@ async def get_info(name, quality):
             msg += f"**‣ Runtime : {duration} minutes**\n"
         if episode:
             msg += f"**‣ No of episodes : {episode}**\n"
+        if quality or is_url(invite_link) or tags:
+            msg += "\n\n"
         if quality:
-            msg += f"\n\n**‣ Quality Available :** `{quality}`\n"
+            msg += f"**‣ Quality Available :** `{quality}`\n"
+        if is_url(invite_link):
+            msg += f"\n**‣ Invite link :** **[XXXX XXXX XXXX]({args.l})**"
+        if tags:
+            msg += f"\n {tags}"
     except Exception:
         LOGS.info(traceback.format_exc())
         msg, pic_url = None, None
