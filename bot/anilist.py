@@ -148,7 +148,8 @@ async def get_info(name, quality, invite_link, tags):
         if quality:
             msg += f"**‣ Quality Available :** `{quality}`\n"
         if is_url(invite_link):
-            msg += f"\n**‣ Invite link :** **[XXXX XXXX XXXX]({args.l})**"
+            link = reformat_spaces(invite_link)
+            msg += f"\n**‣ Invite link :** **[XXXX XXXX XXXX]({link})**"
         if tags:
             msg += f"\n {tags}"
     except Exception:
