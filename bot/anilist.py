@@ -146,11 +146,13 @@ async def get_info(name, quality, invite_link, tags):
         if quality or is_url(invite_link) or tags:
             msg += "\n\n"
         if quality:
-            msg += f"**‣ Quality Available :** `{quality}`\n\n"
+            msg += f"**‣ Quality Available :** `{quality}`\n"
         if is_url(invite_link):
             link = reformat_spaces(invite_link)
-            msg += f"**‣ Invite link :** **[XXXX XXXX XXXX]({link})**\n\n"
+            msg += f"**‣ Invite link :** **[XXXX XXXX XXXX]({link})**\n"
         if tags:
+            if quality or is_url(invite_link):
+                msg += "\n"
             msg += f"{tags}"
     except Exception:
         LOGS.info(traceback.format_exc())
